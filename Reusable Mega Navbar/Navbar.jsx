@@ -13,4 +13,3 @@ export function Navbar() {
     </nav>
   );
 }
-
