@@ -9,19 +9,24 @@ export function FruitsSearch() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-    useEffect(() => {
-        if (query.trim() === '') {
-            setResults([]);
-            return;
-        }
-        const timeoutId = setTimeout(async() => {
-            try {
-                const response = await fetch(`https://fruit-search.freecodecamp.rocks/api/fruits?q=${query}`)
-                const data = await response.json();
-                
-            } catch {}
-        }, 700)
-    }, [query]);
+        useEffect(() => {
+            if (query.trim() === '') {
+                setResults([]);
+                return;
+            }
+            const timeoutId = setTimeout(async () => {
+                try {
+                    const response = await fetch(`https://fruit-search.freecodecamp.rocks/api/fruits?q=${query}`)
+                    const data = await response.json();
+                    setResults(
+                        data.map(fruit => fruit.name)
+                    )
+                } catch (error) {
+                    console.error(error);
+                }
+            }, 700)
+            return () => clearTimeout(timeoutId);
+        }, [query]);
     }
     return (
         <div id="search-container">
@@ -34,7 +39,7 @@ export function FruitsSearch() {
             <div id="results">
                 {results.length > 0 ? results.map((fruit, key) => (
                     <p className="result-item" key={key}>{fruit}</p>
-                )) : <p>No results found</p>} 
+                )) : <p>No results found</p>}
             </div>
         </div>
     )
