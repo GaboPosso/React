@@ -18,12 +18,12 @@ export const OTPGenerator = () => {
                 if (prevCount <= 1) {
                     setCTADisabled(false);
                     clearInterval(timerRef.current);
-                    document.getElementById('otp-timer').textContent = "OTP expired. Please generate a new one.";
+                    document.getElementById('otp-timer').textContent = "OTP expired. Click the button to generate a new OTP.";
                     setOtp('');
                     return null;
                 }
 
-                document.getElementById('otp-timer').textContent = `OTP will expire in ${prevCount - 1} seconds.`;
+                document.getElementById('otp-timer').textContent = `Expires in ${prevCount - 1} seconds.`;
                 return prevCount - 1;
             })
         }, 1000);
