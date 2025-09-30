@@ -1,42 +1,60 @@
 const { useState, useEffect, useRef } = React;
 
 export const OTPGenerator = () => {
-    const [otp, setOtp] = useState('');
-    const timerRef = useRef(null);
-    const [count, setCount] = useState(null);
-    const [ctaDisabled, setCTADisabled] = useState(false)
+  const [countdown, setCountdown] = useState(null)
+  const [otpCode, setOTPCode] = useState(null)
+  const [ctaDisabled, setCTADisabled] = useState(false)
+  const [expiredMsgVisible, setExpiredMsgVisible] = useState(false)
+  const timerRef = useRef()
 
-    const generateOTP = () => {
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
+  const otpButtonHandler = () => {
+    if(timerRef.current) clearInterval(timerRef.current)
+
+    setOTPCode(Math.floor(100000 + Math.random() * 900000))
+    setCountdown(5)
+    setCTADisabled(true)
+
+    timerRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev === 1) {
+          setCTADisabled(false)
+          clearInterval(timerRef.current)
         }
-        setOtp(Math.floor(100000 + Math.random() * 900000).toString());
-        setCount(5);
 
-        timerRef.current = setInterval(() => {
-            setCount(prevCount => {
-                if (prevCount <= 1) {
-                    setCTADisabled(false);
-                    clearInterval(timerRef.current);
-                    document.getElementById('otp-timer').textContent = "OTP expired. Please generate a new one.";
-                    setOtp('');
-                    return null;
-                }
+        return prev - 1
+      })
+    }, 1000)
+  }
 
-                document.getElementById('otp-timer').textContent = `OTP will expire in ${prevCount - 1} seconds.`;
-                return prevCount - 1;
-            })
-        }, 1000);
-        setCTADisabled(true);       
-              
+  useEffect(() => {
+    return () => {
+      if(timerRef.current) clearInterval(timerRef.current)
     }
-    return (
-        <div className="container">
-            <h1 id="otp-title">OTP Generator</h1>
-            <h2 id="otp-display">{otp ? otp : "Click 'Generate OTP' to get a code"}</h2>
-            <p id="otp-timer" aria-live="assertive"></p>
-            <button id="generate-otp-button" onClick={generateOTP}>Generate OTP</button>
+  }, [])
 
-        </div>
-    )
+  return (
+    <div className="container">
+      <h1 id="otp-title">OTP Generator</h1>
+      <h2 id="otp-display">
+        {!!otpCode
+          ? otpCode
+          : "Click 'Generate OTP' to get a code"
+        }
+      </h2>
+      
+        <p id="otp-timer" aria-live="assertive">
+          { countdown !== null ? countdown > 0
+            ? `Expires in: ${countdown} seconds`
+            : "OTP expired. Click the button to generate a new OTP." : "" }          
+        </p>
+      
+      <button
+        id="generate-otp-button"
+        onClick={otpButtonHandler} 
+        disabled={ctaDisabled}
+      >
+        Generate OTP
+      </button>
+    </div>
+  )
 };
