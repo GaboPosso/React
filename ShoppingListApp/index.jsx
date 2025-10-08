@@ -6,15 +6,21 @@ export const ShoppingList = () => {
     const [query, setQuery] = useState("");
     const [selectedItems, setSelectedItems] = useState([]);
 
-    const filteredItems = items.filter((item) => {
+    const filteredItems = useMemo(() => {
         return (
-            item.toLowerCase().includes(query.toLowerCase())
+            items.filter((item) => {
+                return (
+                    item.toLowerCase().includes(query.toLowerCase())
+                )
+            })
         )
-    })
+    }, [query]);
 
     const toggleItem = (item) => {
-        setSelectedItems()
-    }
+        setSelectedItems((prev) =>
+            prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+        );
+    };
     return (
         <div className="container">
             <h1>Shopping List</h1>
@@ -29,10 +35,10 @@ export const ShoppingList = () => {
                         return (
                             <li key={item}>
                                 <label>
-                                <input type="checkbox" onChange={() => {
-                                    toggleItem(item)
-                                }} />
-                                {item}
+                                    <input type="checkbox" onChange={() => {
+                                        toggleItem(item)
+                                    }} />
+                                    {item}
                                 </label>
                             </li>
                         )
