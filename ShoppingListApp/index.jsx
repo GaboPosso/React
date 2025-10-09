@@ -1,12 +1,16 @@
-const { useState } = React;
+const { useState, useMemo, useCallback } = React;
 
 const items = ["Apples", "Bananas", "Strawberries", "Blueberries", "Mangoes", "Pineapple", "Lettuce", "Broccoli", "Paper Towels", "Dish Soap"];
+
+let prevToggleItem = null;
+
 export const ShoppingList = () => {
 
     const [query, setQuery] = useState("");
     const [selectedItems, setSelectedItems] = useState([]);
 
     const filteredItems = useMemo(() => {
+        console.log("Filtering items...");
         return (
             items.filter((item) => {
                 return (
@@ -16,11 +20,22 @@ export const ShoppingList = () => {
         )
     }, [query]);
 
-    const toggleItem = (item) => {
+    const toggleItem = useCallback((item) => {
+
         setSelectedItems((prev) =>
             prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
         );
-    };
+
+    }, [setSelectedItems])
+
+
+
+    if (prevToggleItem !== toggleItem) {
+        console.log("New toggleItem function");
+        prevToggleItem = toggleItem;
+    } else {
+        console.log("Current toggleItem function");
+    }
     return (
         <div className="container">
             <h1>Shopping List</h1>
