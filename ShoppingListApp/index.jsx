@@ -21,16 +21,16 @@ export const ShoppingList = () => {
     }, [query]);
 
     const toggleItem = useCallback((item) => {
+    
+    setSelectedItems((prev) =>
+      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+    );
+  
+  }, [setSelectedItems])
+        
+  
 
-        setSelectedItems((prev) =>
-            prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-        );
-
-    }, [setSelectedItems])
-
-
-
-    if (prevToggleItem !== toggleItem) {
+    if (prevToggleItem !== toggleItem) { 
         console.log("New toggleItem function");
         prevToggleItem = toggleItem;
     } else {
