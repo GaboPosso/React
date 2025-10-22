@@ -18,13 +18,14 @@ export function CurrencyConverter() {
         const fromValue = currencyValues[fromCurrency];
         const toValue = currencyValues[toCurrency];
         return (amount / fromValue) * toValue;
-    }, [amount, fromCurrency, toCurrency]);
+    }, [fromCurrency]);
 
     const handleFromCurrencyChange = useCallback((e) => {
         setFromCurrency(e.target.value);
     }, []);
 
     const handleToCurrencyChange = useCallback((e) => {
+        
         setToCurrency(e.target.value);
     }, []);
 
